@@ -1,36 +1,48 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import moment from 'moment';
+import axios from 'axios';
+import * as todoActions from 'actions/todo';
 
-export default class Demo extends Component {
+class Demo extends Component {
 
+  constructor(props) {
+	super(props);
+    this.props.getAllTodos();
+  }
   provide_time() {
     return moment().format('MMMM Do YYYY, h:mm:ss a');
   }
 
   get(){
-	var request = new XMLHttpRequest();
-	request.open("GET", "http://localhost:8000/api/v1/get", false);
-	request.send(null);
-	return;
+	return this.props.getAllTodos();
   }
   pst(){
-	var request = new XMLHttpRequest();
-	request.open("POST", "http://localhost:8000/api/v1/add", false);
-	request.send(null);
-	return;
+	return this.props.addTodo("New task"); 
   }
   del(){
-	var request = new XMLHttpRequest();
-	request.open("DELETE", "http://localhost:8000/api/v1/remove", false);
-	request.send(null);
-	return;
+
+	return this.props.removeTodoById(2);
   }
   put(){
-	var request = new XMLHttpRequest();
-	request.open("PUT", "http://localhost:8000/api/v1/done", false);
-	request.send(null);
-	return;
+	return this.props.putTodo();
   }
+  
+  showTodos() {
+    const todoCount = this.props.todo.todos.length;
+    const todos = this.props.todo.todos;
+    if (todoCount > 0) {
+      return todos.map(todo => {
+        console.log(todo.title);
+        return <p key={todo.id}>{todo.title}</p>;
+      });
+    }
+    else {
+      return (
+        <p>Sorry no todos :(</p>
+      );
+    }
+   }
   
   render() {
     const time = this.provide_time();
@@ -42,7 +54,16 @@ export default class Demo extends Component {
 		<button onClick={() => this.pst()}>POST /api/v1/add</button>
 		<button onClick={() => this.del()}>DELETE /api/v1/remove</button>
 		<button onClick={() => this.put()}>PUT /api/v1/done</button>
+		{this.showTodos()}
       </div>
     );
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    todo: state.todo,
+  }
+}
+
+export default connect(mapStateToProps, {...todoActions})(Demo);
