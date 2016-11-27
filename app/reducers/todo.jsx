@@ -1,4 +1,4 @@
-import { ADD_TODO, REQUEST_TODOS, RECEIVE_TODOS, REQUEST_ERROR, REMOVE_TODO } from 'actions/types';
+import { ADD_TODO, REQUEST_TODOS, RECEIVE_TODOS, REQUEST_ERROR, REMOVE_TODO, UPDATE_TODO } from 'actions/types';
 
 const initState = {
   loading: false,
@@ -38,7 +38,20 @@ export function todoReducer(state = initState , action){
         todos: [
           ...state.todos.filter(
 		    function(elem){
-				return elem.id != action.id;
+				return elem.id != action.info.id;
+			})
+        ]
+      } 
+	case UPDATE_TODO:
+      return {
+	    ...state,
+	    loading: false,
+        todos: [
+          ...state.todos.map(
+		    function(elem){
+				if(elem.id == action.updated.id)
+					elem = action.updated;
+				return elem;
 			})
         ]
       } 

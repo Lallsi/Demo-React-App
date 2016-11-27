@@ -4,3 +4,4 @@ export const REQUEST_TODOS = 'request_todos';
 export const RECEIVE_TODOS = 'receive_todos';
 export const REQUEST_ERROR = 'request_error';
 export const REMOVE_TODO = 'remove_todo';
+export const UPDATE_TODO = 'update_todo';

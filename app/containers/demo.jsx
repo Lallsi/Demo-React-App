@@ -9,6 +9,11 @@ class Demo extends Component {
   constructor(props) {
 	super(props);
     this.props.getAllTodos();
+	
+	this.state = {value: ''};
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
   provide_time() {
     return moment().format('MMMM Do YYYY, h:mm:ss a');
@@ -17,15 +22,15 @@ class Demo extends Component {
   get(){
 	return this.props.getAllTodos();
   }
-  pst(){
-	return this.props.addTodo("New task"); 
+  pst(title){
+	return this.props.addTodo(title); 
   }
-  del(){
+  del(id){
 
-	return this.props.removeTodoById(2);
+	return this.props.removeTodoById(id);
   }
-  put(){
-	return this.props.putTodo();
+  put(id){
+	return this.props.putTodo(id, true);
   }
   
   showTodos() {
@@ -33,16 +38,28 @@ class Demo extends Component {
     const todos = this.props.todo.todos;
     if (todoCount > 0) {
       return todos.map(todo => {
-        console.log(todo.title);
-        return <p key={todo.id}>{todo.title}</p>;
+        return <p key={todo.id}>
+		Id: {todo.id},&nbsp; Title: "{todo.title}",&nbsp; Done: {todo.done.toString()}&nbsp; 
+		<button onClick={() => this.put(todo.id)}>Mark as done</button> &nbsp;
+		<button onClick={() => this.del(todo.id)}>Delete</button>
+		</p>;
       });
     }
     else {
       return (
-        <p>Sorry no todos :(</p>
+        <p>No tasks</p>
       );
     }
    }
+  
+    handleChange(event) {
+		this.setState({value: event.target.value});
+	}
+
+	handleSubmit(event) {
+		this.pst(this.state.value);
+		event.preventDefault();
+	}
   
   render() {
     const time = this.provide_time();
@@ -50,10 +67,12 @@ class Demo extends Component {
       <div>
         <h1>Hello World!</h1>
         <h3>{time}</h3>
-        <button onClick={() => this.get()}>GET /api/v1/get</button>
-		<button onClick={() => this.pst()}>POST /api/v1/add</button>
-		<button onClick={() => this.del()}>DELETE /api/v1/remove</button>
-		<button onClick={() => this.put()}>PUT /api/v1/done</button>
+		<form onSubmit={this.handleSubmit}>
+			<label>
+				<input type="text" value={this.state.value} onChange={this.handleChange} />
+			</label>
+			<input type="submit" value="Add task" />
+		</form>
 		{this.showTodos()}
       </div>
     );
