@@ -18,4 +18,4 @@ You can also run following command to just build /dist
     npm run build
 
 	
-	
+	asd
