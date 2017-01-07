@@ -19,4 +19,3 @@ You can also run following command to just build /dist
 
 	
 	
-testasd
