@@ -16,3 +16,7 @@ In the production environment this should probably be served with nginx or simil
 You can also run following command to just build /dist
 
     npm run build
+
+	
+	
+testasd
